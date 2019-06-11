@@ -21,6 +21,8 @@ class Interacting():
 		self.interactions_dict = {
 		    "JOKE"      : self.joke,
 		    "ASK"       : self.ask,
+		    "GOAL"      : self.goal,
+		    "PROUD"     : self.proud,
 		    "ENCOURAGE" : self.encourage,
 		    "TIP"       : self.tip,
 		    "WATER"     : self.water
@@ -31,7 +33,7 @@ class Interacting():
 	def do_interaction(self):
 		rospy.loginfo("interacting")
 		self.interaction()()
-		rospy.sleep(20)
+		rospy.sleep(10)
 		# Tell the navigation node that the interaction is done
 		self.pub.publish('Done')
 
@@ -55,7 +57,23 @@ class Interacting():
 	def ask(self):
 		rospy.loginfo("Asking about day")
 		self.sc.say('Can you tell me about your day?')
-		rospy.sleep(60)
+		rospy.sleep(45)
+
+	# Ask the user about a goal they have
+	def goal(self):
+		rospy.loginfo("Asking about goal")
+		self.sc.say('What is a goal that you have?')
+		rospy.sleep(4)
+		self.sc.say('It can be related to anything, such as health, family, or your personal life.')
+		rospy.sleep(45)
+	
+	# Ask the user about something that they are proud about accomplishing last week
+	def proud(self):
+		rospy.loginfo("Asking about accomplishment")
+		self.sc.say('Is there anything you did last week that you are proud of?')
+		rospy.sleep(7)
+		self.sc.say('Even the smallest accomplishments are worth celebrating!')
+		rospy.sleep(45)
 
 	# Encourage the user
 	def encourage(self):
