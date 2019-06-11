@@ -1,0 +1,32 @@
+<launch>
+
+  <arg name="map_file"        default="/home/turtlebot/turtle_ws_2/src/robocoach/src/maps/atk6.yaml"/>
+  <arg name="initial_pose_x"  default="-1.99"/>
+  <arg name="initial_pose_y"  default="0.4696"/>
+  <arg name="initial_pose_a"  default="0.0"/>
+
+  <!-- Main map navigation script for moving between points -->
+  <node name="map_navigation" pkg="robocoach" type="map_navigation.py" output="screen">
+  </node>
+
+  <!-- Sound -->
+  <node name="playing_sound_node" pkg="sound_play" type="soundplay_node.py" output="screen">
+  </node>
+
+  <!-- Interactions with human -->
+  <node name="interacting_node" pkg="robocoach" type="interacting.py" output="screen">
+  </node>
+
+  <!-- Communicating with remote interface -->
+  <node name="server_node" pkg="robocoach" type="server.py" output="screen">
+  </node>
+
+  <!-- Maps for navigation -->
+  <include file="$(find turtlebot_navigation)/launch/amcl_demo.launch">
+    <arg name="initial_pose_x" value="$(arg initial_pose_x)"/>
+    <arg name="initial_pose_y" value="$(arg initial_pose_y)"/>
+    <arg name="initial_pose_a" value="$(arg initial_pose_a)"/>
+    <arg name="map_file" value="$(arg map_file)"/>
+  </include>
+  
+</launch>
