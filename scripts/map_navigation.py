@@ -142,22 +142,22 @@ class MapNavigation():
 		rospy.loginfo('Done moving')
 		self.pub.publish('MoveDone')
 	
-	# Called when the interaction with the robot is completed	
+	# Called when the interaction with the robot is completed
 	def interact_callback(self, notif):
 		self.interacting = False
 		rospy.loginfo('Message from interact: ' + notif.data)
 
 	# Called when we receive data from the remote client.
-	# Sets the location to move to.	
+	# Sets the location to move to.
 	def socket_callback(self, received_data):
 		loc = received_data.data.strip()
 		try:
-			self.chosen_loc = int(loc)-1
+			self.chosen_loc = int(loc) - 1
 			rospy.loginfo('Message from interface: ' + loc)
 		except Exception as e:
 			rospy.loginfo('Error: ' + str(e))
 
-	# Stop the robot	
+	# Stop the robot
 	def shutdown(self):
 		rospy.loginfo("Shutdown command received. Quitting program")
 		rospy.sleep()

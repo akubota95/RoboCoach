@@ -75,13 +75,13 @@ class recording_node(object):
             self.loop_rate = rospy.Rate(10)
 
             #publisher
-	    self.pub=rospy.Publisher('record', numpy_msg(Floats),queue_size=1)
+	    self.pub=rospy.Publisher('feedback', String ,queue_size=1)
 
 
 	def callback(self, data):
-
+	    
 	    #rospy.loginfo(rospy.get_caller_id() + "I heard %f", data)
-	    self.current_exercise_id = data.data
+	    self.current_exercise_id = int (data.data)
 	    print (self.current_exercise_id)
 	    '''
 	    #detect the currently active excercise 
@@ -90,11 +90,11 @@ class recording_node(object):
 		    self.current_exercise_id = int (self.current_exercise_id)
 	    	    print (self.current_exercise_id)
 	    except Exception as e:
-		    rospy.logininfo ('Error: ' + str (e) ) 
+		    #rospy.logininfo ('Error: ' + str (e) ) 
 	    '''
 
 	def recording(self, data):
-	    if (self.current_exercise_id != -1):		
+	    if (self.current_exercise_id != -1 and self.current_exercise_id  != 4):		
 			#Set the current flag to know for which excercise it is recording the movements of the colored objects
 			self.flag = self.current_exercise_id
 
@@ -116,7 +116,7 @@ class recording_node(object):
 
 	    #The user has done the selected excercise. 
 	    #System will Calculate and publish the number of repetitions for that excercise and then reset eveyrthing
-	    if(self.current_exercise_id == -1):
+	    if(self.current_exercise_id == 4):
 		
 		'''
 		if ( self.flag == -1 ):  #TODO comment this block
@@ -145,7 +145,7 @@ class recording_node(object):
 				self.msg1 = self.repetition_feedback ( self.repetition_green_1 , self.repetition_pink_1 )
 			if ( len(self.repetition_green_1) > 1):
 				self.msg2 = self.progress_feedback (self.repetition_green_1 , self.repetition_pink_1)	
-
+			print ( " 1 is selected and ...")
 			#reset the flag
 			self.flag = 4
 
@@ -220,14 +220,14 @@ class recording_node(object):
 	#Funtion to compare the progress in repetition and give a feedback to the user accordingly 
 	def progress_feedback (self, repetition_green , repetition_pink ):
 		dif = repetition_green[len(repetition_green)-2] -  repetition_green[len(repetition_green)-1]
-		if (dif == 0 and repetition_green[len(repetition_green)-2] = 0):
-			msg = " Hmm, you haven't worked out yet. Let's make some move! :) "
+		if (dif == 0 and repetition_green[len(repetition_green)-2] == 0):
+			msg = "Lets move!"
 		elif (dif == 0 ):
-			msg = "You are performing as good as before. Countinue the good job!"
+			msg = "You are performing as good as before. Keep it up!"
 		elif ( dif > 0):
-			msg= "Excelent! You have made a progress since the last time you did the same excersise!" 
+			msg= "Your performance has improved!" 
 		elif ( dif < 0):
-			msg = "You did a better job last time! "
+			msg = "Your history shows you can do better! "
 		return msg
 	
 
@@ -235,9 +235,8 @@ class recording_node(object):
 
 	    #gets the current status of the excerxises: exercises = [0, 0, 0], 0: active, 1:deactive
 	    rospy.Subscriber('exercises', Int16, self.callback)
-	    ''' #TODO uncomment this
-	    rospy.Subscriber('socket', String, self.callback)
-	    '''
+	    #rospy.Subscriber('socket', String, self.callback)
+	   
 
 	    #gets x and y coordinates of the green object and pink object
 	    rospy.Subscriber('coordinates', numpy_msg(Floats), self.recording)

@@ -11,20 +11,18 @@ import numpy
 import socket
 
 HOST = ''  # Standard loopback interface address (localhost)
-PORT = 65430       # Port to listen on (non-privileged ports are > 1023)
+PORT = 65432       # Port to listen on (non-privileged ports are > 1023)
 
-def talker():
-
-
-    	    pub=rospy.Publisher('exercises', Int16, queue_size=10)
-    	    rospy.init_node('exercises_selection', anonymous=True)
+def callback():
+	    #Setup publisher
+    	    rospy.init_node('feedback_msg_socket', anonymous=True)
     	    rate = rospy.Rate(10) # 10hz
 
+	    #Setup socket to read messages sent by UI 
 	    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	    s.bind((HOST, PORT))
 	    s.listen(1)
 	    conn, addr = s.accept()
-	    #with conn:
 	    print('Connected by', addr)
 	    while True:
 		    data = conn.recv(1024)
@@ -32,7 +30,8 @@ def talker():
 		        continue
 		    else:
 		        print(data)
-			ex_id = data #TODO change to 1, 2, or 3
+			ex_id = int (data) #TODO change to 1, 2, or 3
+			print ( ex_id)
 			pub.publish(ex_id)
 			rospy.loginfo (ex_id)
 			#rate.sleep()
@@ -49,4 +48,4 @@ def talker():
 		    '''
 
 if __name__ == '__main__':
-    talker()
+    rospy.Subscriber('feedback', String, self.callback)

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
 """
-Filename: server.pyp
+Filename: server.py
 Authors: Alyssa Kubota, Yi Peng, Maryam Pourebadi
-Description: Opens a server to listen for requests from the user. 
+Description: Opens a socket to listen for requests from the user. 
     Used to select which location RoboCoach should move to while walking
     with the user.
     Written as part of CSE 276D Healthcare Robotics final project.
@@ -17,7 +17,7 @@ class Connection():
 
 	def __init__(self):
 		self.host = ''
-		self.port = 65430
+		self.port = 65433
 		self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.conn = None
 		# ROS Stuff
@@ -39,6 +39,7 @@ class Connection():
 	def wait_for_msg(self):
 		rospy.loginfo("Waiting to receive message")
 		data = self.conn.recv(1024)
+		# Only publish data when we receive a non-empty message
 		if data:
 			self.pub.publish(data)
 			print(data)
