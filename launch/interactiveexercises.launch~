@@ -1,0 +1,16 @@
+<launch>
+
+  <!-- Colored object tracking and localization script -->
+  <node name="colored_object_tracking" pkg="robocoach" type="colored_object_tracking.py" output="screen">
+  </node>
+
+  <!-- Communicating with remote interface and exercise_recording node -->
+  <node name="exercise_socket" pkg="robocoach" type="exercise_socket.py" output="screen">
+  </node>
+
+
+  <!-- Node for selecting different exercises and generating feedback messages-->
+  <node name="exercise_recording" pkg="robocoach" type="exercise_recording.py" output="screen">
+  </node>
+
+</launch>
